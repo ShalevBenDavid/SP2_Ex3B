@@ -14,19 +14,20 @@ namespace ariel {
 
     public:
         // Constructors.
-        Fraction (int numerator = 1, int denominator = 1) {
+        Fraction (int numerator, int denominator) {
             if (denominator == 0) {
-                throw std::invalid_argument("You can't divide by 0!")
+                throw std::invalid_argument("You can't divide by 0!");
             }
             this -> _numerator = numerator;
             this -> _denominator = denominator;
         }
+        Fraction () : _numerator(1), _denominator(1) {} // Default
         Fraction (const Fraction& copy) : _numerator(copy._numerator), _denominator(copy._denominator) {} // Copy
         Fraction (Fraction&& copy) noexcept : _numerator(copy._numerator), _denominator(copy._denominator) {} // Move
         Fraction (float num) : _numerator((int) num * PRECISION), _denominator(PRECISION) {}
 
         // Destructor
-        ~Fraction() { delete }
+        ~Fraction() {}
 
         // Stream operators.
         // <<<<<<<<<<<<<<<<<< Operator << >>>>>>>>>>>>>>>>>>
