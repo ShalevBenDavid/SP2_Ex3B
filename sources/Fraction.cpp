@@ -32,12 +32,18 @@ Fraction Fraction :: operator - (const float& other) const {
 
 // <<<<<<<<<<<<<<<<<< Operator / >>>>>>>>>>>>>>>>>>
 Fraction Fraction :: operator / (const Fraction& other) const {
+    if (other == 0) {
+        throw std::invalid_argument("You can't divide by 0!");
+    }
     Fraction temp (_numerator * other._denominator,
                    _denominator * other._numerator);
     temp.reduce();
     return temp;
 }
 Fraction Fraction :: operator / (const float& other) const {
+    if (other == 0) {
+        throw std::invalid_argument("You can't divide by 0!");
+    }
     Fraction temp (other);
     temp = *this / temp;
     temp.reduce();
@@ -59,14 +65,21 @@ Fraction Fraction :: operator * (const float& other) const {
 }
 
 // <<<<<<<<<<<<<<<<<< Operator = >>>>>>>>>>>>>>>>>>
-Fraction& Fraction :: operator = (const Fraction& other) {
-    if (this != &other) {
-        _numerator = other._numerator;
-        _denominator = other._denominator;
+Fraction& Fraction :: operator = (const Fraction& right) {
+    if (this != &right) {
+        this -> _numerator = right._numerator;
+        this -> _denominator = right._denominator;
     }
     return *this;
 }
 Fraction& Fraction :: operator = (Fraction&& other) noexcept {
+    if (this != &other) {
+        _numerator = other._numerator;
+        _denominator = other._denominator;
+        // Ruin other's data.
+        other._numerator = 0;
+        other._denominator = 1;
+    }
     return *this;
 }
 
@@ -100,10 +113,11 @@ Fraction Fraction :: operator -- (int dont_care) {
  *
  * @param numerator
  * @param denominator
- * @return the gcd of the numerator and denominator
+ * @return the gcd of the numerator and denominator of this object.
  */
 int gcd (int numerator, int denominator) {
     if (!numerator) { return denominator; }
+    // Wouldn't happen but for the general case of computing gcd.
     if (!denominator) { return numerator; }
     while (denominator) {
         int r = numerator % denominator;
@@ -117,7 +131,7 @@ int gcd (int numerator, int denominator) {
  * Reduces a fraction before returning it.
  */
 void Fraction:: reduce () {
-    int save_gcd = gcd (this -> getNumerator(), this -> getDenominator());
-    this -> getNumerator() /= save_gcd;
-    this -> getDenominator() /= save_gcd;
+    int save_gcd = gcd (this -> _numerator, this -> _denominator);
+    this -> _numerator /= save_gcd;
+    this -> _denominator /= save_gcd;
 }
