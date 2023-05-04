@@ -26,7 +26,10 @@ namespace ariel {
             this -> reduce();
         }
         Fraction () : _numerator(1), _denominator(1) {} // Default
-        Fraction (float num) : _numerator((int) (num * PRECISION)), _denominator(PRECISION) {}
+        Fraction (float num) : _numerator((int) (num * PRECISION)), _denominator(PRECISION) {
+            // Reduce fraction.
+            this -> reduce();
+        }
 
         // Stream operators.
         // <<<<<<<<<<<<<<<<<< Operator << >>>>>>>>>>>>>>>>>>
@@ -51,6 +54,7 @@ namespace ariel {
             // Assign the data and return input.
             frac._denominator = denominator;
             frac._numerator = numerator;
+            // Reduce frac.
             frac.reduce();
             return input;
         }
@@ -111,11 +115,7 @@ namespace ariel {
         // Compare operators.
         // <<<<<<<<<<<<<<<<<< Operator = >>>>>>>>>>>>>>>>>>
         friend bool operator == (const Fraction &left, const Fraction &right) {
-            Fraction temp_left (left);
-            Fraction temp_right (right);
-            temp_left.reduce();
-            temp_right.reduce();
-            return (temp_left._numerator == temp_right._numerator && temp_left._denominator == temp_right._denominator);
+            return (left._numerator == right._numerator && left._denominator == right._denominator);
         }
         friend bool operator == (const float &left, const Fraction &right) {
             Fraction temp (left);
