@@ -33,31 +33,9 @@ namespace ariel {
 
         // Stream operators.
         // <<<<<<<<<<<<<<<<<< Operator << >>>>>>>>>>>>>>>>>>
-        friend std::ostream& operator << (std::ostream& output, const Fraction& frac) {
-            output << frac._numerator << '/' << frac._denominator;
-            return output;
-        }
+        friend std :: ostream& operator << (std :: ostream& output, const Fraction& frac);
         // <<<<<<<<<<<<<<<<<< Operator >> >>>>>>>>>>>>>>>>>>
-        friend std::istream& operator >> (std::istream& input, Fraction& frac) {
-            int numerator = 0;
-            int denominator = 0;
-            // Insert to the input stream.
-            input >> numerator >> denominator;
-            // If denominator is 0, throw exception.
-            if (denominator == 0) {
-                throw std::runtime_error("You can't assign 0 to the fraction's denominator!");
-            }
-            // If frac is null, throw input.
-            if (!input) {
-                return input;
-            }
-            // Assign the data and return input.
-            frac._denominator = denominator;
-            frac._numerator = numerator;
-            // Reduce frac.
-            frac.reduce();
-            return input;
-        }
+        friend std :: istream& operator >> (std :: istream& input, Fraction& frac);
 
         // Arithmetic operators.
         // <<<<<<<<<<<<<<<<<< Operator + >>>>>>>>>>>>>>>>>>
@@ -85,7 +63,7 @@ namespace ariel {
         Fraction operator / (const float& other) const;
         friend Fraction operator / (const float& left, const Fraction& right) {
             if (right == 0) {
-                throw std::runtime_error("You can't divide by 0!");
+                throw std :: runtime_error("You can't divide by 0!");
             }
             Fraction temp (left);
             temp = temp / right;
@@ -114,72 +92,72 @@ namespace ariel {
 
         // Compare operators.
         // <<<<<<<<<<<<<<<<<< Operator = >>>>>>>>>>>>>>>>>>
-        friend bool operator == (const Fraction &left, const Fraction &right) {
+        friend bool operator == (const Fraction& left, const Fraction& right) {
             return (left._numerator == right._numerator && left._denominator == right._denominator);
         }
-        friend bool operator == (const float &left, const Fraction &right) {
+        friend bool operator == (const float& left, const Fraction& right) {
             Fraction temp (left);
             return (temp == right);
         }
-        friend bool operator == (const Fraction &left, const float &right) {
+        friend bool operator == (const Fraction& left, const float& right) {
             Fraction temp (right);
             return (left == temp);
         }
 
         // <<<<<<<<<<<<<<<<<< Operator <= >>>>>>>>>>>>>>>>>>
-        friend bool operator <= (const Fraction &left, const Fraction &right) {  // 2 * 5 <= -3
+        friend bool operator <= (const Fraction& left, const Fraction& right) {  // 2 * 5 <= -3
             return (left._numerator * right._denominator <= right._numerator * left._denominator);
         }
-        friend bool operator <= (const float &left, const Fraction &right) {
+        friend bool operator <= (const float& left, const Fraction& right) {
             Fraction temp (left);
             return (temp <= right);
         }
-        friend bool operator <= (const Fraction &left, const float &right) {
+        friend bool operator <= (const Fraction& left, const float& right) {
             Fraction temp (right);
             return (left <= temp);
         }
 
         // <<<<<<<<<<<<<<<<<< Operator >= >>>>>>>>>>>>>>>>>>
-        friend bool operator >= (const Fraction &left, const Fraction &right) {
+        friend bool operator >= (const Fraction& left, const Fraction& right) {
             return (left > right) || (left == right);
         }
-        friend bool operator >= (const float &left, const Fraction &right) {
+        friend bool operator >= (const float& left, const Fraction& right) {
             return (left > right) || (left == right);
         }
-        friend bool operator >= (const Fraction &left, const float &right) {
+        friend bool operator >= (const Fraction& left, const float& right) {
             return (left > right) || (left == right);
         }
 
         // <<<<<<<<<<<<<<<<<< Operator > >>>>>>>>>>>>>>>>>>
-        friend bool operator > (const Fraction &left, const Fraction &right) {
+        friend bool operator > (const Fraction& left, const Fraction& right) {
             return !(left <= right);
         }
-        friend bool operator > (const float &left, const Fraction &right) {
+        friend bool operator > (const float& left, const Fraction& right) {
             return !(left <= right);
         }
-        friend bool operator > (const Fraction &left, const float &right) {
+        friend bool operator > (const Fraction& left, const float& right) {
             return !(left <= right);
         }
 
         // <<<<<<<<<<<<<<<<<< Operator < >>>>>>>>>>>>>>>>>>
-        friend bool operator < (const Fraction &left, const Fraction &right) {
+        friend bool operator < (const Fraction& left, const Fraction& right) {
             return !(left >= right);
         }
-        friend bool operator < (const float &left, const Fraction &right) {
+        friend bool operator < (const float& left, const Fraction& right) {
             return !(left >= right);
         }
-        friend bool operator < (const Fraction &left, const float &right) {
+        friend bool operator < (const Fraction& left, const float& right) {
             return !(left >= right);
         }
 
         // <<<<<<<<<<<<<<<<<< Operator != >>>>>>>>>>>>>>>>>>
-        friend bool operator != (const Fraction &left, const Fraction &right) {
+        friend bool operator != (const Fraction& left, const Fraction& right) {
             return !(left == right);
         }
-        friend bool operator != (const float &left, const Fraction &right) {
+        friend bool operator != (const float& left, const Fraction& right) {
             return !(left == right);
         }
-        friend bool operator != (const Fraction &left, const float &right) {
+        friend bool operator != (const Fraction& left, const float& right) {
             return !(left == right);
         }
 
