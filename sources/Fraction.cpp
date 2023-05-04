@@ -4,6 +4,11 @@ using namespace ariel;
 
 // <<<<<<<<<<<<<<<<<< Operator + >>>>>>>>>>>>>>>>>>
 Fraction Fraction :: operator + (const Fraction& other) const {
+    // Check for overflow.
+    if ((abs(other._numerator) > MAX / abs(_denominator)) || (abs(_numerator) > MAX / abs(other._denominator)) ||
+            (abs(_denominator) > MAX / abs(other._denominator))) {
+        throw std::overflow_error("An overflow occurred.");
+    }
     Fraction temp ((other._numerator * _denominator) + (_numerator * other._denominator),
                    _denominator * other._denominator);
     temp.reduce();
@@ -33,7 +38,7 @@ Fraction Fraction :: operator - (const float& other) const {
 // <<<<<<<<<<<<<<<<<< Operator / >>>>>>>>>>>>>>>>>>
 Fraction Fraction :: operator / (const Fraction& other) const {
     if (other == 0) {
-        throw std::invalid_argument("You can't divide by 0!");
+        throw std::runtime_error("You can't divide by 0!");
     }
     Fraction temp (_numerator * other._denominator,
                    _denominator * other._numerator);
@@ -42,7 +47,7 @@ Fraction Fraction :: operator / (const Fraction& other) const {
 }
 Fraction Fraction :: operator / (const float& other) const {
     if (other == 0) {
-        throw std::invalid_argument("You can't divide by 0!");
+        throw std::runtime_error("You can't divide by 0!");
     }
     Fraction temp (other);
     temp = *this / temp;
@@ -62,25 +67,6 @@ Fraction Fraction :: operator * (const float& other) const {
     temp = *this * temp;
     temp.reduce();
     return temp;
-}
-
-// <<<<<<<<<<<<<<<<<< Operator = >>>>>>>>>>>>>>>>>>
-Fraction& Fraction :: operator = (const Fraction& right) {
-    if (this != &right) {
-        this -> _numerator = right._numerator;
-        this -> _denominator = right._denominator;
-    }
-    return *this;
-}
-Fraction& Fraction :: operator = (Fraction&& other) noexcept {
-    if (this != &other) {
-        _numerator = other._numerator;
-        _denominator = other._denominator;
-        // Ruin other's data.
-        other._numerator = 0;
-        other._denominator = 1;
-    }
-    return *this;
 }
 
 // Prefix increment (++n).
@@ -109,6 +95,20 @@ Fraction Fraction :: operator -- (int dont_care) {
     return copy;
 }
 
+// Get methods.
+int Fraction :: getNumerator () { return _numerator; }
+int Fraction :: getDenominator () { return _denominator; }
+
+// Set methods.
+void Fraction :: setNumerator (int numerator) {
+    _numerator = numerator;
+    this -> reduce();
+}
+void Fraction :: setDenominator (int denominator) {
+    _denominator = denominator;
+    this -> reduce();
+}
+
 /**
  *
  * @param numerator
@@ -132,6 +132,11 @@ int gcd (int numerator, int denominator) {
  */
 void Fraction:: reduce () {
     int save_gcd = gcd (this -> _numerator, this -> _denominator);
-    this -> _numerator /= save_gcd;
-    this -> _denominator /= save_gcd;
+    _numerator /= save_gcd;
+    _denominator /= save_gcd;
+    // If the denominator is negative, multiply both the denominator and numerator by -1.
+    if (_denominator < 0) {
+        _numerator *= -1;
+        _denominator *= -1;
+    }
 }

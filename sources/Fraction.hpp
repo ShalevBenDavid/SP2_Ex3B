@@ -3,8 +3,11 @@
 #ifndef SP2_EX3A_FRACTION_H
 #define SP2_EX3A_FRACTION_H
 #include <iostream>
+#include <limits>
 
 const int PRECISION = 1000;
+const int MAX = std::numeric_limits <int> :: max();
+const int MIN = std::numeric_limits <int> :: min();
 
 namespace ariel {
     class Fraction {
@@ -15,14 +18,9 @@ namespace ariel {
     public:
         // Constructors.
         Fraction (const int numerator, int denominator) {
-            // If denominator is 0, throw excdption.
+            // If denominator is 0, throw exception.
             if (denominator == 0) {
                 throw std::invalid_argument("You can't create a fraction where denominator is 0!");
-            }
-            // If the denominator is negative, multiply both the denominator and numerator by -1.
-            if (_denominator < 0) {
-                _numerator *= -1;
-                _denominator *= -1;
             }
             this -> _numerator = numerator;
             this -> _denominator = denominator;
@@ -30,25 +28,30 @@ namespace ariel {
             this -> reduce();
         }
         Fraction () : _numerator(1), _denominator(1) {} // Default
-        Fraction (const Fraction& copy) : _numerator(copy._numerator), _denominator(copy._denominator) {} // Copy
-        Fraction (Fraction&& copy) noexcept : _numerator(copy._numerator), _denominator(copy._denominator) {
-            // Destroy copy.
-            copy._numerator = 0;
-            copy._denominator = 1;
-        } // Move
         Fraction (float num) : _numerator((int) (num * PRECISION)), _denominator(PRECISION) {}
-
-        // Destructor
-        ~Fraction() {}
 
         // Stream operators.
         // <<<<<<<<<<<<<<<<<< Operator << >>>>>>>>>>>>>>>>>>
         friend std::ostream& operator << (std::ostream& output, const Fraction& frac) {
-            output << frac._numerator << '/' << frac._denominator;  
+            output << frac._numerator << '/' << frac._denominator;
             return output;
         }
         // <<<<<<<<<<<<<<<<<< Operator >> >>>>>>>>>>>>>>>>>>
-        friend std::istream& operator >> (std::istream& input, const Fraction& frac) {
+        friend std::istream& operator >> (std::istream& input, Fraction& frac) {
+            int numerator, denominator = 0;
+            // Insert to the input stream.
+            input >> frac._numerator >> frac._denominator;
+            // If denominator is 0, throw exception.
+            if (frac._denominator == 0) {
+                throw std::invalid_argument("You can't assign 0 to the fraction's denominator!");
+            }
+            // If frac is null, return null.
+            if (!input) {
+                return input;
+            }
+            // Assign the data and return input.
+            frac._denominator = denominator;
+            frac._numerator = numerator;
             return input;
         }
 
@@ -77,6 +80,9 @@ namespace ariel {
         Fraction operator / (const Fraction& other) const;
         Fraction operator / (const float& other) const;
         friend Fraction operator / (const float& left, const Fraction& right) {
+            if (right == 0) {
+                throw std::runtime_error("You can't divide by 0!");
+            }
             Fraction temp (left);
             temp = temp / right;
             temp.reduce();
@@ -109,7 +115,7 @@ namespace ariel {
             Fraction temp_right (right);
             temp_left.reduce();
             temp_right.reduce();
-            return (temp_left._numerator == temp_right._numerator && temp_right._denominator == temp_left._denominator);
+            return (temp_left._numerator == temp_right._numerator && temp_left._denominator == temp_right._denominator);
         }
         friend bool operator == (const float &left, const Fraction &right) {
             Fraction temp (left);
@@ -121,7 +127,7 @@ namespace ariel {
         }
 
         // <<<<<<<<<<<<<<<<<< Operator <= >>>>>>>>>>>>>>>>>>
-        friend bool operator <= (const Fraction &left, const Fraction &right) {
+        friend bool operator <= (const Fraction &left, const Fraction &right) {  // 2 * 5 <= -3
             return (left._numerator * right._denominator <= right._numerator * left._denominator);
         }
         friend bool operator <= (const float &left, const Fraction &right) {
@@ -177,13 +183,12 @@ namespace ariel {
             return !(left == right);
         }
 
-        // <<<<<<<<<<<<<<<<<< Operator = >>>>>>>>>>>>>>>>>>
-        Fraction& operator = (const Fraction& right); // Copy assignment operator.
-        Fraction& operator = (Fraction&& right) noexcept; // Move assignment operator.
-
-            // Get methods.
-        int& getNumerator () { return _numerator; }
-        int& getDenominator () { return _denominator; }
+        // Get methods.
+        int getNumerator ();
+        int getDenominator ();
+        // Set methods.
+        void setNumerator (int numerator);
+        void setDenominator (int denominator);
 
         // Methods
         void reduce ();
