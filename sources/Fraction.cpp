@@ -1,9 +1,8 @@
 // Created by Shalev Ben David.
 #include "Fraction.hpp"
-#include <limits.h>
 using namespace ariel;
 
-// Overflow functions.
+// Overflow functions. Using source: https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html
 void add_overflow (const Fraction&, const Fraction&);
 void sub_overflow (const Fraction&, const Fraction&);
 void div_overflow (const Fraction&, const Fraction&);
