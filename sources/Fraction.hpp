@@ -6,8 +6,6 @@
 #include <limits>
 
 const int PRECISION = 1000;
-const int MAX = std::numeric_limits <int> :: max();
-const int MIN = std::numeric_limits <int> :: min();
 
 namespace ariel {
     class Fraction {
@@ -38,20 +36,22 @@ namespace ariel {
         }
         // <<<<<<<<<<<<<<<<<< Operator >> >>>>>>>>>>>>>>>>>>
         friend std::istream& operator >> (std::istream& input, Fraction& frac) {
-            int numerator, denominator = 0;
+            int numerator = 0;
+            int denominator = 0;
             // Insert to the input stream.
-            input >> frac._numerator >> frac._denominator;
+            input >> numerator >> denominator;
             // If denominator is 0, throw exception.
-            if (frac._denominator == 0) {
-                throw std::invalid_argument("You can't assign 0 to the fraction's denominator!");
+            if (denominator == 0) {
+                throw std::runtime_error("You can't assign 0 to the fraction's denominator!");
             }
-            // If frac is null, return null.
+            // If frac is null, throw input.
             if (!input) {
                 return input;
             }
             // Assign the data and return input.
             frac._denominator = denominator;
             frac._numerator = numerator;
+            frac.reduce();
             return input;
         }
 
@@ -184,8 +184,8 @@ namespace ariel {
         }
 
         // Get methods.
-        int getNumerator ();
-        int getDenominator ();
+        int getNumerator () const;
+        int getDenominator () const;
         // Set methods.
         void setNumerator (int numerator);
         void setDenominator (int denominator);
