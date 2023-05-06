@@ -54,6 +54,13 @@ void mul_overflow (const Fraction&, const Fraction&);
         return temp;
     }
 
+    Fraction operator + (const float& left, const Fraction& right) {
+        Fraction temp (left);
+        temp = temp + right;
+        temp.reduce();
+        return temp;
+    }
+
     // <<<<<<<<<<<<<<<<<< Operator - >>>>>>>>>>>>>>>>>>
     Fraction Fraction :: operator - (const Fraction& other) const {
         // Check for overflow.
@@ -67,6 +74,13 @@ void mul_overflow (const Fraction&, const Fraction&);
     Fraction Fraction :: operator - (const float& other) const {
         Fraction temp(other);
         temp = *this - temp;
+        temp.reduce();
+        return temp;
+    }
+
+    Fraction operator - (const float& left, const Fraction& right) {
+        Fraction temp (left);
+        temp = temp - right;
         temp.reduce();
         return temp;
     }
@@ -95,6 +109,16 @@ void mul_overflow (const Fraction&, const Fraction&);
         return temp;
     }
 
+    Fraction operator / (const float& left, const Fraction& right) {
+        if (right == 0) {
+            throw std :: runtime_error("You can't divide by 0!");
+        }
+        Fraction temp (left);
+        temp = temp / right;
+        temp.reduce();
+        return temp;
+    }
+
     // <<<<<<<<<<<<<<<<<< Operator * >>>>>>>>>>>>>>>>>>
     Fraction Fraction :: operator * (const Fraction& other) const {
         // Check for overflow.
@@ -108,6 +132,13 @@ void mul_overflow (const Fraction&, const Fraction&);
     Fraction Fraction :: operator * (const float& other) const {
         Fraction temp(other);
         temp = *this * temp;
+        temp.reduce();
+        return temp;
+    }
+
+    Fraction operator * (const float& left, const Fraction& right) {
+        Fraction temp (left);
+        temp = temp * right;
         temp.reduce();
         return temp;
     }
@@ -149,6 +180,76 @@ void mul_overflow (const Fraction&, const Fraction&);
             throw std :: overflow_error("An overflow occurred!");
         }
         return copy;
+    }
+
+    // <<<<<<<<<<<<<<<<<< Operator = >>>>>>>>>>>>>>>>>>
+    bool operator == (const Fraction& left, const Fraction& right) {
+        return (left._numerator == right._numerator && left._denominator == right._denominator);
+    }
+    bool operator == (const float& left, const Fraction& right) {
+        Fraction temp (left);
+        return (temp == right);
+    }
+    bool operator == (const Fraction& left, const float& right) {
+        Fraction temp (right);
+        return (left == temp);
+    }
+
+    // <<<<<<<<<<<<<<<<<< Operator <= >>>>>>>>>>>>>>>>>>
+    bool operator <= (const Fraction& left, const Fraction& right) {  // 2 * 5 <= -3
+        return (left._numerator * right._denominator <= right._numerator * left._denominator);
+    }
+    bool operator <= (const float& left, const Fraction& right) {
+        Fraction temp (left);
+        return (temp <= right);
+    }
+    bool operator <= (const Fraction& left, const float& right) {
+        Fraction temp (right);
+        return (left <= temp);
+    }
+
+    // <<<<<<<<<<<<<<<<<< Operator >= >>>>>>>>>>>>>>>>>>
+    bool operator >= (const Fraction& left, const Fraction& right) {
+        return (left > right) || (left == right);
+    }
+    bool operator >= (const float& left, const Fraction& right) {
+        return (left > right) || (left == right);
+    }
+    bool operator >= (const Fraction& left, const float& right) {
+        return (left > right) || (left == right);
+    }
+
+    // <<<<<<<<<<<<<<<<<< Operator > >>>>>>>>>>>>>>>>>>
+    bool operator > (const Fraction& left, const Fraction& right) {
+        return !(left <= right);
+    }
+    bool operator > (const float& left, const Fraction& right) {
+        return !(left <= right);
+    }
+    bool operator > (const Fraction& left, const float& right) {
+        return !(left <= right);
+    }
+
+    // <<<<<<<<<<<<<<<<<< Operator < >>>>>>>>>>>>>>>>>>
+    bool operator < (const Fraction& left, const Fraction& right) {
+        return !(left >= right);
+    }
+    bool operator < (const float& left, const Fraction& right) {
+        return !(left >= right);
+    }
+    bool operator < (const Fraction& left, const float& right) {
+        return !(left >= right);
+    }
+
+    // <<<<<<<<<<<<<<<<<< Operator != >>>>>>>>>>>>>>>>>>
+    bool operator != (const Fraction& left, const Fraction& right) {
+        return !(left == right);
+    }
+    bool operator != (const float& left, const Fraction& right) {
+        return !(left == right);
+    }
+    bool operator != (const Fraction& left, const float& right) {
+        return !(left == right);
     }
 
     // Get methods.
